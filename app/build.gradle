@@ -1,0 +1,54 @@
+apply plugin: 'com.android.application'
+apply plugin: 'findbugs'
+
+android {
+    compileSdkVersion 23
+    buildToolsVersion "23.0.3"
+
+    defaultConfig {
+        applicationId "com.basiccalculator.mybasiccalculator"
+        minSdkVersion 15
+        targetSdkVersion 23
+        versionCode 1
+        versionName "1.0"
+    }
+    buildTypes {
+        debug {
+            debuggable true
+            testCoverageEnabled = true
+
+        }
+
+    }
+}
+
+task customFindbugs(type: FindBugs) {
+    ignoreFailures = true
+    effort = "default"
+    reportLevel = "medium"
+    classes = files("$project.buildDir/intermediates/classes")
+    // excludeFilter = file("$rootProject.rootDir/config/findbugs/exclude.xml")
+
+    source = fileTree('src/main/java/')
+    classpath = files()
+    reports {
+        xml.enabled = true
+        html.enabled = false
+        xml.destination "$project.buildDir/outputs/findbugs/findbugs-output.xml"
+
+
+
+
+        html.destination "$project.buildDir/outputs/findbugs/findbugs-output.html"
+    }
+    build.dependsOn customFindbugs
+}
+
+dependencies {
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+    testCompile 'junit:junit:4.12'
+    compile 'com.android.support:appcompat-v7:23.4.0'
+    androidTestCompile 'com.android.support:support-annotations:23.4.0'
+    androidTestCompile 'com.android.support.test:runner:0.2'
+    androidTestCompile 'com.android.support.test:rules:0.2'
+}
